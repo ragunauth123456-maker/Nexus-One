@@ -9,7 +9,7 @@ export function NavBar() {
           href="#waitlist"
           className="rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.4)]"
         >
-          Join Waitlist
+          Get Early Access
         </a>
       </div>
     </nav>

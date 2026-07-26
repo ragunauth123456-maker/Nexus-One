@@ -34,7 +34,7 @@ export function HeroSection() {
             href="#waitlist"
             className="rounded-full bg-blue-600 px-8 py-3.5 text-base font-semibold text-white transition-all hover:bg-blue-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
           >
-            Join the Waitlist
+            Get Early Access
           </a>
           <button
             onClick={scrollToArchitecture}

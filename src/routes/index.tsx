@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { ArchitectureSection } from "~/components/ArchitectureSection";
 import { Footer } from "~/components/Footer";
 import { HeroSection } from "~/components/HeroSection";
+import { ImagineSection } from "~/components/ImagineSection";
 import { NavBar } from "~/components/NavBar";
 import { PlatformPillars } from "~/components/PlatformPillars";
 import { VisionQuote } from "~/components/VisionQuote";
@@ -24,6 +25,7 @@ function Home() {
       <HeroSection />
       <ArchitectureSection />
       <PlatformPillars />
+      <ImagineSection />
       <VisionQuote />
       <WaitlistSection />
       <Footer />

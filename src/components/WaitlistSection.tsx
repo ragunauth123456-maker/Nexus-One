@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -35,6 +35,15 @@ const EMAIL_HTML = `<!DOCTYPE html>
   </table>
 </body>
 </html>`;
+
+const getWaitlistCount = createServerFn({ method: "GET" }).handler(async () => {
+  const file = Bun.file(WAITLIST_PATH);
+  const exists = await file.exists();
+  if (!exists) return { count: 0 };
+  const text = await file.text();
+  const lines = text.trim().split("\n").filter((l) => l.trim().length > 0);
+  return { count: lines.length };
+});
 
 const submitEmail = createServerFn({ method: "POST" })
   .validator((input: unknown) => {
@@ -93,6 +102,11 @@ export function WaitlistSection() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    getWaitlistCount().then((r) => setCount(r.count)).catch(() => setCount(null));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,6 +116,7 @@ export function WaitlistSection() {
     setError(null);
     try {
       await submitEmail({ data: { email: email.trim() } });
+      setCount((c) => (c !== null ? c + 1 : 1));
       setSubmitted(true);
       setEmail("");
     } catch (err) {
@@ -124,8 +139,10 @@ export function WaitlistSection() {
         <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl">
           Be First.
         </h2>
-        <p className="mb-10 text-lg leading-relaxed text-gray-400">
-          Join the waitlist for early access to the Nexus One platform.
+        <p className="mb-4 text-lg leading-relaxed text-gray-400">
+          {count !== null && count > 0
+            ? `Join ${count} others on the waitlist.`
+            : "Be among the first to get access."}
         </p>
 
         {submitted ? (
@@ -162,6 +179,12 @@ export function WaitlistSection() {
               {loading ? "Joining..." : "Get Early Access"}
             </button>
           </form>
+        )}
+
+        {!submitted && (
+          <p className="mt-3 text-xs text-gray-500">
+            No spam. One update when we launch.
+          </p>
         )}
 
         {error && (
